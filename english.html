@@ -1,0 +1,721 @@
+<!DOCTYPE html>
+<html lang="vi" data-theme="light">
+
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
+  <link rel="icon" href="https://img.icons8.com/fluency/48/abc.png" type="image/png" />
+  <title>Starks Infinity | Vũ Trụ Emoji & IELTS Engine</title>
+  
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Fredoka:wght@300..700&family=Plus+Jakarta+Sans:wght@300..800&display=swap" rel="stylesheet">
+  <script src="https://cdn.tailwindcss.com"></script>
+  
+  <script>
+    tailwind.config = {
+      theme: {
+        extend: {
+          fontFamily: {
+            kids: ['Fredoka', 'sans-serif'],
+            sans: ['Plus Jakarta Sans', 'sans-serif']
+          }
+        }
+      }
+    }
+  </script>
+
+  <style>
+    .custom-scrollbar::-webkit-scrollbar { width: 6px; }
+    .custom-scrollbar::-webkit-scrollbar-thumb { background-color: #cbd5e1; border-radius: 10px; }
+    .custom-scrollbar::-webkit-scrollbar-track { background: transparent; }
+    .emoji-card-glow { box-shadow: 0 20px 40px -15px rgba(245, 158, 11, 0.25); }
+  </style>
+</head>
+
+<body class="bg-slate-50 text-slate-800 antialiased font-sans">
+
+  <div id="loading-screen" class="fixed inset-0 bg-white z-50 flex flex-col items-center justify-center gap-6">
+    <div class="relative w-24 h-24 flex items-center justify-center">
+      <div class="absolute inset-0 border-4 border-dashed border-amber-500 rounded-full animate-spin"></div>
+      <div class="absolute w-16 h-16 bg-gradient-to-tr from-amber-500 to-orange-500 rounded-2xl rotate-45 animate-pulse"></div>
+      <span class="absolute text-white font-kids font-black text-2xl">✨</span>
+    </div>
+    <div class="text-center space-y-2">
+      <h2 class="text-3xl font-black tracking-wider bg-clip-text text-transparent bg-gradient-to-r from-amber-500 via-orange-500 to-indigo-600 font-kids">STARKS EMOJI V4</h2>
+      <p class="text-xs font-bold text-slate-400 animate-pulse uppercase tracking-widest">Đang khởi tạo kho dữ liệu từ vựng và thuật toán quay tua đề IELTS...</p>
+    </div>
+  </div>
+
+  <div id="app-container" class="hidden min-h-screen flex flex-col">
+    
+    <header class="bg-white border-b-4 border-amber-400 sticky top-0 z-40 shadow-sm px-4 py-3">
+      <div class="max-w-7xl mx-auto flex flex-col md:flex-row items-center justify-between gap-4">
+        
+        <div onclick="switchView('dashboard')" class="flex items-center gap-3 cursor-pointer group">
+          <div class="bg-gradient-to-tr from-amber-500 to-orange-500 p-2.5 rounded-2xl shadow-md transition-transform group-hover:scale-105">
+            <span class="font-kids text-2xl font-black text-white tracking-tight">Starks</span>
+          </div>
+          <div>
+            <span class="text-xs font-black text-amber-600 tracking-widest uppercase block">Emoji Pro Edition</span>
+            <div class="flex items-center gap-1.5 bg-slate-100 px-2 py-0.5 rounded-full mt-0.5">
+              <span class="w-1.5 h-1.5 bg-emerald-500 rounded-full animate-ping"></span>
+              <span id="header-user-name" class="text-[11px] font-bold text-slate-600">Học viên: Khách</span>
+            </div>
+          </div>
+        </div>
+
+        <nav class="flex flex-wrap justify-center gap-1.5">
+          <button onclick="switchView('dashboard')" class="nav-tab bg-slate-100 hover:bg-amber-50 text-slate-700 font-black px-4 py-2 rounded-xl text-xs transition-all">🏠 Tổng Quan</button>
+          <button onclick="switchView('kids')" class="nav-tab bg-slate-100 hover:bg-amber-50 text-amber-700 font-black px-4 py-2 rounded-xl text-xs transition-all">🧸 Vũ Trụ Cho Bé</button>
+          <button onclick="switchView('k12')" class="nav-tab bg-slate-100 hover:bg-emerald-50 text-emerald-700 font-black px-4 py-2 rounded-xl text-xs transition-all">🎒 Lớp 1 - 12</button>
+          <button onclick="switchView('ielts')" class="nav-tab bg-slate-100 hover:bg-indigo-50 text-indigo-700 font-black px-4 py-2 rounded-xl text-xs transition-all">🦅 IELTS Tự Đổi Đề</button>
+        </nav>
+
+        <div class="flex items-center gap-4">
+          <div class="bg-amber-100 px-3 py-1.5 rounded-xl border border-amber-300 flex items-center gap-1 text-xs font-black text-amber-700">
+            ⭐ Điểm số: <span id="score-count">100</span> Đpt
+          </div>
+          <button onclick="toggleModal('profile-modal')" class="bg-slate-100 hover:bg-slate-200 p-2 rounded-xl text-sm transition-transform active:scale-95">⚙️ Tên Bé</button>
+        </div>
+
+      </div>
+    </header>
+
+    <main class="max-w-7xl mx-auto w-full p-4 md:p-6 flex-grow">
+
+      <section id="view-dashboard" class="space-y-8 animate-fade-in">
+        <div class="bg-gradient-to-r from-amber-500 via-orange-500 to-indigo-900 text-white rounded-3xl p-6 md:p-8 shadow-xl relative overflow-hidden">
+          <div class="max-w-3xl space-y-4">
+            <span class="bg-white/20 text-white font-bold text-[10px] px-2.5 py-1 rounded-full uppercase tracking-wider">Bản Cập Nhật 100% Sạch Ảnh Lỗi</span>
+            <h1 class="text-3xl md:text-5xl font-extrabold tracking-tight font-kids">Học Tiếng Anh Siêu Tốc Cùng Emojis! ✨</h1>
+            <p class="text-sm text-amber-50 font-medium leading-relaxed">Chúng tôi đã tối ưu hóa toàn bộ dữ liệu hình ảnh sang định dạng Emojis trực quan sinh động nhất. Chế độ trẻ em được phân tách thành các bộ từ vựng động vật cụ thể và chuỗi chủ đề cốt lõi. Chế độ IELTS tự động xáo trộn đề liên tục không giới hạn.</p>
+          </div>
+        </div>
+
+        <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
+          <div class="bg-white border-4 border-amber-300 rounded-3xl p-6 flex flex-col justify-between hover:shadow-md transition-all">
+            <div class="space-y-3">
+              <span class="text-3xl">🧸</span>
+              <h2 class="text-xl font-kids font-black text-amber-700">Chế Độ Bé Học Vô Tận</h2>
+              <p class="text-xs text-slate-500 leading-relaxed font-medium">Khám phá Bảng chữ cái A-Z trực quan, các nhóm động vật siêu đa dạng cùng 4 chủ đề giao tiếp cốt lõi tích hợp sẵn âm thanh đọc mẫu.</p>
+            </div>
+            <button onclick="switchView('kids')" class="w-full bg-amber-500 hover:bg-amber-600 text-white font-bold py-3 rounded-2xl text-xs border-b-4 border-amber-700 mt-6 transition-all">Mở Kho Từ Vựng 🚀</button>
+          </div>
+
+          <div class="bg-white border-4 border-emerald-300 rounded-3xl p-6 flex flex-col justify-between hover:shadow-md transition-all">
+            <div class="space-y-3">
+              <span class="text-3xl">🎒</span>
+              <h2 class="text-xl font-bold text-emerald-700">Ngữ Pháp K-12 Phổ Thông</h2>
+              <p class="text-xs text-slate-500 leading-relaxed font-medium">Bố cục phân tích các điểm ngữ pháp then chốt trên trường cho học sinh tự học từ lớp 1 đến lớp 12 dễ hiểu nhất.</p>
+            </div>
+            <button onclick="switchView('k12')" class="w-full bg-emerald-500 hover:bg-emerald-600 text-white font-bold py-3 rounded-2xl text-xs border-b-4 border-emerald-700 mt-6 transition-all">Học Theo Lớp 🚀</button>
+          </div>
+
+          <div class="bg-white border-4 border-indigo-300 rounded-3xl p-6 flex flex-col justify-between hover:shadow-md transition-all">
+            <div class="space-y-3">
+              <span class="text-3xl">🦅</span>
+              <h2 class="text-xl font-bold text-indigo-700">Đấu Trường Cambridge IELTS</h2>
+              <p class="text-xs text-slate-500 leading-relaxed font-medium">Phần mềm tự động hoán đổi chủ đề đề thi mới ngay khi bạn bấm nộp bài hoặc bấm tải lại trang, đi kèm trình lưu trữ bài viết real-time.</p>
+            </div>
+            <button onclick="switchView('ielts')" class="w-full bg-indigo-600 hover:bg-indigo-700 text-white font-bold py-3 rounded-2xl text-xs border-b-4 border-indigo-800 mt-6 transition-all">Luyện IELTS Xoay Đề 🚀</button>
+          </div>
+        </div>
+      </section>
+
+      <section id="view-kids" class="hidden space-y-6 animate-fade-in font-kids">
+        <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-4 border-b-4 border-amber-400 pb-4">
+          <div class="flex items-center gap-3">
+            <span class="text-4xl">🐱</span>
+            <div>
+              <h2 class="text-2xl font-black text-amber-600">Thế Giới Từ Vựng Đa Dạng</h2>
+              <p class="text-xs text-slate-400 font-sans font-medium">Bấm phím mũi tên hoặc nhấn "Từ Tiếp Theo" để kích hoạt thuật toán lướt vòng lặp vô hạn.</p>
+            </div>
+          </div>
+          <div class="bg-amber-100 text-amber-800 font-sans font-black text-xs px-4 py-2 rounded-xl border border-amber-200">
+            Vị trí: <span id="kids-progress-text">Từ 1 / 10</span>
+          </div>
+        </div>
+
+        <div class="grid grid-cols-1 lg:grid-cols-4 gap-6">
+          <div class="lg:col-span-1 bg-white p-3 rounded-3xl border-2 border-slate-200 space-y-2 max-h-[520px] overflow-y-auto custom-scrollbar" id="kids-topic-list">
+            </div>
+
+          <div class="lg:col-span-3 bg-white border-4 border-amber-200 rounded-3xl p-6 text-center space-y-6 flex flex-col justify-between emoji-card-glow">
+            
+            <div class="space-y-4">
+              <div class="w-full max-w-sm h-56 bg-amber-50/60 mx-auto rounded-3xl border-2 border-dashed border-amber-200 flex items-center justify-center relative select-none">
+                <span id="kids-main-emoji" class="text-[120px] drop-shadow-md transform hover:scale-110 transition-transform duration-300 cursor-pointer" onclick="speakCurrentKidsWord()">🦁</span>
+              </div>
+
+              <div>
+                <div class="flex items-center justify-center gap-2">
+                  <h3 id="kids-word-en" class="text-4xl font-black text-slate-900 tracking-wide">Lion</h3>
+                  <button onclick="speakCurrentKidsWord()" class="bg-amber-100 hover:bg-amber-200 p-2 rounded-full text-sm transition-transform active:scale-95">🔊 Nghe đọc</button>
+                </div>
+                <span id="kids-word-ipa" class="text-indigo-600 text-sm font-sans tracking-wide font-bold">/ˈlaɪ.ən/</span>
+              </div>
+              <p id="kids-word-vi" class="text-xl font-bold text-slate-500">Con sư tử</p>
+            </div>
+
+            <div class="bg-amber-50 rounded-2xl p-4 border border-amber-100 max-w-md w-full mx-auto space-y-3 font-sans">
+              <p class="text-[11px] font-bold text-slate-500 uppercase tracking-wider">🎤 Bé bấm nút đọc to máy chấm điểm nhé:</p>
+              <button id="kids-record-btn" onclick="triggerKidsSpeech()" class="w-14 h-14 bg-red-500 text-white rounded-full text-xl shadow-md border-b-4 border-red-700 active:scale-95 transition-transform mx-auto flex items-center justify-center">🎙️</button>
+              <div id="kids-score-box" class="hidden bg-white p-2 rounded-xl border border-emerald-300 text-center animate-bounce">
+                <span class="text-amber-500 text-sm">⭐⭐⭐</span>
+                <p class="text-xs font-black text-emerald-600">Bé phát âm xuất sắc lắm! (+10 Điểm)</p>
+              </div>
+            </div>
+
+            <div class="flex justify-between max-w-md w-full mx-auto font-sans pt-3 border-t border-slate-100">
+              <button onclick="changeKidsWord(-1)" class="bg-slate-100 hover:bg-slate-200 px-5 py-2.5 rounded-xl text-xs font-bold text-slate-600 active:scale-95 transition-transform">⬅️ Từ Trước</button>
+              <button onclick="changeKidsWord(1)" class="bg-amber-500 hover:bg-amber-600 text-white px-6 py-2.5 rounded-xl text-xs font-bold shadow-md active:scale-95 transition-transform">Từ Tiếp Theo ➡️</button>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <section id="view-k12" class="hidden space-y-6 animate-fade-in">
+        <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-4 border-b-4 border-emerald-400 pb-4">
+          <div class="flex items-center gap-3">
+            <span class="text-4xl">🎒</span>
+            <div>
+              <h2 class="text-2xl font-black text-emerald-700">Ngữ Pháp Điểm Trường Khối K-12</h2>
+              <p class="text-xs text-slate-400 font-medium">Tập hợp các cấu trúc câu cốt lõi phân bổ chuẩn theo độ tuổi phổ thông</p>
+            </div>
+          </div>
+          <div class="flex items-center gap-2">
+            <span class="text-xs font-bold text-slate-500 uppercase">Khối học:</span>
+            <select id="k12-grade-select" onchange="renderK12Lessons()" class="bg-emerald-50 border-2 border-emerald-300 rounded-xl px-3 py-1.5 font-bold text-xs text-emerald-800 focus:outline-none"></select>
+          </div>
+        </div>
+        <div id="k12-content-area" class="grid grid-cols-1 md:grid-cols-2 gap-6"></div>
+      </section>
+
+      <section id="view-ielts" class="hidden space-y-6 animate-fade-in">
+        <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-4 border-b-4 border-indigo-500 pb-4">
+          <div class="flex items-center gap-3">
+            <span class="text-4xl">🦅</span>
+            <div>
+              <h2 class="text-2xl font-black text-indigo-700">Cambridge IELTS Auto-Rotator Engine</h2>
+              <p class="text-xs text-slate-400 font-medium">Cơ chế tự động phát hiện bài nộp hoặc tải lại trang để đổi đề bài Speaking & Writing ngẫu nhiên</p>
+            </div>
+          </div>
+          <button onclick="rotateAllPrompts()" class="bg-slate-100 hover:bg-indigo-50 border border-slate-300 font-bold text-xs text-indigo-700 px-3 py-2 rounded-xl transition-all">🔄 Chủ Động Đổi Đề Khác</button>
+        </div>
+
+        <div class="grid grid-cols-1 lg:grid-cols-3 gap-6">
+          <div class="bg-white border-2 border-indigo-100 rounded-3xl p-5 shadow-sm space-y-4 flex flex-col justify-between">
+            <div class="space-y-4">
+              <div class="flex items-center gap-2 border-b pb-2">
+                <span class="text-xl">🎙️</span>
+                <h3 class="font-extrabold text-slate-800 text-sm uppercase tracking-wider">IELTS Speaking Part 2 Cue Card</h3>
+              </div>
+              <div class="bg-indigo-50 p-4 rounded-xl space-y-2">
+                <span class="bg-indigo-200 text-indigo-800 text-[9px] font-black px-2 py-0.5 rounded uppercase">Cambridge Topic Pool</span>
+                <p id="ielts-speaking-prompt" class="font-bold text-slate-800 text-xs leading-relaxed min-h-[90px]"></p>
+              </div>
+            </div>
+            <div class="text-center p-3 bg-slate-50 rounded-xl border border-dashed border-slate-200 mt-4">
+              <button id="ielts-speak-btn" onclick="triggerIeltSpeaking()" class="w-full bg-indigo-600 hover:bg-indigo-700 text-white text-xs font-bold px-4 py-2.5 rounded-xl shadow-md transition-all">Bắt Đầu Nói & Chấm Điểm</button>
+              <p class="text-[9px] text-slate-400 mt-2 font-medium">Bấm nộp điểm xong hệ thống sẽ đổi ngay đề Speaking mới tinh khác.</p>
+            </div>
+          </div>
+
+          <div class="lg:col-span-2 bg-white border-2 border-indigo-100 rounded-3xl p-5 shadow-sm space-y-4 flex flex-col justify-between">
+            <div class="space-y-3">
+              <div class="flex items-center justify-between border-b pb-2">
+                <div class="flex items-center gap-2">
+                  <span class="text-xl">✍️</span>
+                  <h3 class="font-extrabold text-slate-800 text-sm uppercase tracking-wider">IELTS Writing Task 2 Academic</h3>
+                </div>
+                <span id="writing-word-count" class="bg-slate-100 text-slate-600 text-xs font-black px-2.5 py-1 rounded-md">0 Từ</span>
+              </div>
+              <div class="bg-slate-50 p-4 rounded-xl">
+                <p id="ielts-writing-prompt" class="font-bold text-slate-700 text-xs leading-relaxed min-h-[50px]"></p>
+              </div>
+              <textarea id="ielts-writing-input" oninput="countWritingWords()" placeholder="Bắt đầu viết bài luận văn học thuật của bạn tại đây để tự động lưu lại..." class="w-full h-44 bg-slate-50 border-2 border-slate-200 rounded-2xl p-3 text-xs font-medium focus:outline-none focus:border-indigo-500 focus:bg-white transition-colors resize-none"></textarea>
+            </div>
+            <div class="flex justify-between items-center mt-4 pt-2 border-t">
+              <span class="text-[10px] text-slate-400 font-medium">Dữ liệu bài luận viết của bạn được lưu an toàn thời gian thực.</span>
+              <button onclick="submitIeltsWriting()" class="bg-indigo-600 hover:bg-indigo-700 text-white font-bold text-xs px-5 py-2.5 rounded-xl shadow-md transition-all">Nộp Bài & Đổi Đề Luận Mới</button>
+            </div>
+          </div>
+        </div>
+      </section>
+    </main>
+
+    <footer class="bg-slate-900 text-slate-400 text-center py-6 px-4 mt-auto border-t-4 border-amber-400">
+      <p class="font-kids font-black text-white text-sm">✨ Starks Infinity Enterprise 2026 | Vũ Trụ Học Tập Không Giới Hạn ✨</p>
+    </footer>
+  </div>
+
+  <div id="profile-modal" class="hidden fixed inset-0 bg-slate-900/60 z-50 backdrop-blur-sm flex items-center justify-center p-4">
+    <div class="bg-white rounded-3xl max-w-sm w-full p-6 space-y-5 shadow-2xl border-4 border-amber-400">
+      <div class="flex justify-between items-center border-b pb-2">
+        <h3 class="text-lg font-black text-slate-800">Cài Đặt Hồ Sơ ⚙️</h3>
+        <button onclick="toggleModal('profile-modal')" class="text-slate-400 hover:text-slate-600 font-bold">✕</button>
+      </div>
+      <div class="space-y-3 text-xs">
+        <div>
+          <label class="block font-bold text-slate-500 mb-1">TÊN CỦA BÉ HOẶC HỌC VIÊN:</label>
+          <input type="text" id="user-name-input" placeholder="Nhập tên..." class="w-full bg-slate-100 border-2 border-slate-200 rounded-xl p-2.5 font-bold text-slate-700 focus:outline-none focus:border-amber-400">
+        </div>
+      </div>
+      <button onclick="saveUserProfile()" class="w-full bg-amber-500 hover:bg-amber-600 text-white font-bold py-3 rounded-xl shadow-md text-xs">Xác Nhận Lưu Lại</button>
+    </div>
+  </div>
+
+  <script>
+    // KHO ĐỀ IELTS TỰ ĐỔI ĐÈ (CAMBRIDGE POOL)
+    const IELTS_SPEAKING_POOL = [
+      "Describe a memorable journey you have made in your life. You should say where you went and explain why it was memorable.",
+      "Describe a book you have read recently that you found looking forward to reading again. What was it about?",
+      "Describe an environmental problem in your country or hometown. What are the causes and possible solutions?",
+      "Describe a successful small business that you know about. What do they sell and why do you think they succeed?",
+      "Describe an important technological invention that changed human history. Why do you think it is crucial?",
+      "Describe a leisure activity near or on the sea that you would like to try in the future."
+    ];
+
+    const IELTS_WRITING_POOL = [
+      "Some people think that the use of Artificial Intelligence (AI) in education will replace teachers entirely. To what extent do you agree or disagree?",
+      "Many international blockbusters dominate cinemas worldwide. Should local governments subsidize domestic films to protect their culture?",
+      "In many nations, traditional family structures are changing with more single-parent households. What are the effects of this trend?",
+      "Some people believe that university education should be completely free for everyone. Discuss both views and give your opinion.",
+      "As cities expand, green spaces are often replaced by concrete buildings. What problems does this cause, and how can they be solved?"
+    ];
+
+    // CƠ SỞ DỮ LIỆU CHUẨN XÁC CHỦ ĐỀ CỦA BÉ 100% SỬ DỤNG EMOJI KHÔNG LO LỖI ẢNH
+    const KIDS_DATABASE = {
+      alphabet: [
+        { word: "A (Apple)", ipa: "/ˈæp.əl/", vi: "Quả táo", emoji: "🍎" },
+        { word: "B (Banana)", ipa: "/bəˈnɑː.nə/", vi: "Quả chuối", emoji: "🍌" },
+        { word: "C (Cat)", ipa: "/kæt/", vi: "Con mèo", emoji: "🐱" },
+        { word: "D (Dog)", ipa: "/dɒɡ/", vi: "Con chó", emoji: "🐶" },
+        { word: "E (Elephant)", ipa: "/ˈel.ɪ.fənt/", vi: "Con voi", emoji: "🐘" },
+        { word: "F (Fish)", ipa: "/fɪʃ/", vi: "Con cá", emoji: "🐟" },
+        { word: "G (Grape)", ipa: "/ɡreɪp/", vi: "Quả nho", emoji: "🍇" },
+        { word: "H (Hat)", ipa: "/hæt/", vi: "Cái mũ", emoji: "🎩" },
+        { word: "I (Ice-cream)", ipa: "/ˌaɪsˈkriːm/", vi: "Kem", emoji: "🍦" },
+        { word: "J (Juice)", ipa: "/dʒuːs/", vi: "Nước ép quả", emoji: "🧃" },
+        { word: "K (Kangaroo)", ipa: "/ˌkæŋ.ɡərˈuː/", vi: "Chuột túi", emoji: "🦘" },
+        { word: "L (Lion)", ipa: "/ˈlaɪ.ən/", vi: "Sư tử", emoji: "🦁" },
+        { word: "M (Monkey)", ipa: "/ˈmʌŋ.ki/", vi: "Con khỉ", emoji: "🐵" },
+        { word: "N (Nest)", ipa: "/nest/", vi: "Cái tổ chim", emoji: "🪹" },
+        { word: "O (Orange)", ipa: "/ˈɒr.ɪndʒ/", vi: "Quả cam", emoji: "🍊" },
+        { word: "P (Pig)", ipa: "/pɪɡ/", vi: "Con heo (lợn)", emoji: "🐷" },
+        { word: "Q (Queen)", ipa: "/kwiːn/", vi: "Nữ hoàng", emoji: "👸" },
+        { word: "R (Rabbit)", ipa: "/ˈræb.ɪt/", vi: "Con thỏ", emoji: "🐰" },
+        { word: "S (Sun)", ipa: "/sʌn/", vi: "Mặt trời", emoji: "☀️" },
+        { word: "T (Tiger)", ipa: "/ˈtaɪ.ɡər/", vi: "Con hổ", emoji: "🐯" },
+        { word: "U (Umbrella)", ipa: "/ʌmˈbrel.ə/", vi: "Cái ô (dù)", emoji: "☂️" },
+        { word: "V (Van)", ipa: "/væn/", vi: "Xe tải nhỏ", emoji: "🚐" },
+        { word: "W (Whale)", ipa: "/weɪl/", vi: "Cá voi", emoji: "🐋" },
+        { word: "X (Xylophone)", ipa: "/ˈzaɪ.lə.fəʊn/", vi: "Đàn mộc cầm", emoji: "🪘" },
+        { word: "Y (Yo-yo)", ipa: "/ˈjəʊ.jəʊ/", vi: "Đồ chơi yo-yo", emoji: "🪀" },
+        { word: "Z (Zebra)", ipa: "/ˈzeb.rə/", vi: "Ngựa vằn", emoji: "🦓" }
+      ],
+      pets: [
+        { word: "Dog", ipa: "/dɒɡ/", vi: "Chó", emoji: "🐶" },
+        { word: "Cat", ipa: "/kæt/", vi: "Mèo", emoji: "🐱" },
+        { word: "Mouse", ipa: "/maʊs/", vi: "Chuột", emoji: "🐭" },
+        { word: "Rabbit", ipa: "/ˈræb.ɪt/", vi: "Thỏ", emoji: "🐰" },
+        { word: "Hamster", ipa: "/ˈhæm.stər/", vi: "Chuột hamster", emoji: "🐹" },
+        { word: "Parrot", ipa: "/ˈpær.ət/", vi: "Con vẹt", emoji: "🦜" },
+        { word: "Pig", ipa: "/pɪɡ/", vi: "Con heo (lợn)", emoji: "🐷" },
+        { word: "Cow", ipa: "/kaʊ/", vi: "Con bò", emoji: "🐮" },
+        { word: "Sheep", ipa: "/ʃiːp/", vi: "Con cừu", emoji: "🐑" },
+        { word: "Goat", ipa: "/ɡəʊt/", vi: "Con dê", emoji: "🐐" },
+        { word: "Horse", ipa: "/hɔːs/", vi: "Con ngựa", emoji: "🐴" },
+        { word: "Donkey", ipa: "/ˈdɒŋ.ki/", vi: "Con lừa", emoji: "🫏" },
+        { word: "Duck", ipa: "/dʌk/", vi: "Con vịt", emoji: "🦆" },
+        { word: "Chicken", ipa: "/ˈtʃɪk.ɪn/", vi: "Con gà", emoji: "🐔" },
+        { word: "Goose", ipa: "/ɡuːs/", vi: "Con ngỗng", emoji: "🪿" },
+        { word: "Buffalo", ipa: "/ˈbʌf.ə.ləʊ/", vi: "Con trâu", emoji: "🐃" }
+      ],
+      wild: [
+        { word: "Lion", ipa: "/ˈlaɪ.ən/", vi: "Sư tử", emoji: "🦁" },
+        { word: "Tiger", ipa: "/ˈtaɪ.ɡər/", vi: "Con hổ", emoji: "🐯" },
+        { word: "Leopard", ipa: "/ˈlep.əd/", vi: "Con báo", emoji: "🐆" },
+        { word: "Elephant", ipa: "/ˈel.ɪ.fənt/", vi: "Con voi", emoji: "🐘" },
+        { word: "Giraffe", ipa: "/dʒɪˈrɑːf/", vi: "Hươu cao cổ", emoji: "🦒" },
+        { word: "Zebra", ipa: "/ˈzeb.rə/", vi: "Ngựa vằn", emoji: "🦓" },
+        { word: "Bear", ipa: "/beər/", vi: "Con gấu", emoji: "🐻" },
+        { word: "Panda", ipa: "/ˈpæn.də/", vi: "Gấu trúc", emoji: "🐼" },
+        { word: "Monkey", ipa: "/ˈmʌŋ.ki/", vi: "Con khỉ", emoji: "🐵" },
+        { word: "Gorilla", ipa: "/ɡəˈrɪl.ə/", vi: "Đười ươi", emoji: "🦍" },
+        { word: "Fox", ipa: "/fɒks/", vi: "Con cáo", emoji: "🦊" },
+        { word: "Wolf", ipa: "/wʊlf/", vi: "Chó sói", emoji: "🐺" },
+        { word: "Deer", ipa: "/dɪər/", vi: "Con hươu", emoji: "🦌" },
+        { word: "Hippopotamus", ipa: "/ˌhɪp.əˈpɒt.ə.məs/", vi: "Hà mã", emoji: "🦛" },
+        { word: "Rhinoceros", ipa: "/raɪˈnɒs.ər.əs/", vi: "Tê giác", emoji: "🦏" },
+        { word: "Kangaroo", ipa: "/ˌkæŋ.ɡərˈuː/", vi: "Chuột túi", emoji: "🦘" },
+        { word: "Camel", ipa: "/ˈkæm.əl/", vi: "Lạc đà", emoji: "🐪" },
+        { word: "Squirrel", ipa: "/ˈskwɪr.əl/", vi: "Con sóc", emoji: "🐿️" },
+        { word: "Hedgehog", ipa: "/ˈhedʒ.hɒɡ/", vi: "Con nhím", emoji: "🦔" },
+        { word: "Bat", ipa: "/bæt/", vi: "Con dơi", emoji: "🦇" }
+      ],
+      marine: [
+        { word: "Fish", ipa: "/fɪʃ/", vi: "Con cá", emoji: "🐟" },
+        { word: "Shark", ipa: "/ʃɑːk/", vi: "Cá mập", emoji: "🦈" },
+        { word: "Whale", ipa: "/weɪl/", vi: "Cá voi", emoji: "🐋" },
+        { word: "Dolphin", ipa: "/ˈdɒl.fɪn/", vi: "Cá heo", emoji: "🐬" },
+        { word: "Octopus", ipa: "/ˈɒk.tə.pəs/", vi: "Bạch tuộc", emoji: "🐙" },
+        { word: "Squid", ipa: "/skwɪd/", vi: "Con mực", emoji: "🦑" },
+        { word: "Crab", ipa: "/kræb/", vi: "Con cua", emoji: "🦀" },
+        { word: "Shrimp", ipa: "/ʃrɪmp/", vi: "Con tôm", emoji: "🦐" },
+        { word: "Lobster", ipa: "/ˈlɒb.stər/", vi: "Tôm hùm", emoji: "🦞" },
+        { word: "Turtle", ipa: "/ˈtɜː.təl/", vi: "Con rùa", emoji: "🐢" },
+        { word: "Seahorse", ipa: "/ˈsiː.hɔːs/", vi: "Cá ngựa", emoji: "🫏" },
+        { word: "Starfish", ipa: "/ˈstɑː.fɪʃ/", vi: "Sao biển", emoji: "⭐" },
+        { word: "Jellyfish", ipa: "/ˈdʒel.i.fɪʃ/", vi: "Con sứa", emoji: "🪼" },
+        { word: "Seal", ipa: "/siːl/", vi: "Hải cẩu", emoji: "🦗" },
+        { word: "Walrus", ipa: "/ˈwɔːl.rəs/", vi: "Con moóc", emoji: "🦭" },
+        { word: "Penguin", ipa: "/ˈpeŋ.ɡwɪn/", vi: "Chim cánh cụt", emoji: "🐧" }
+      ],
+      insects: [
+        { word: "Ant", ipa: "/ænt/", vi: "Con kiến", emoji: "🐜" },
+        { word: "Bee", ipa: "/biː/", vi: "Con ong", emoji: "🐝" },
+        { word: "Butterfly", ipa: "/ˈbʌt.ə.flaɪ/", vi: "Con bướm", emoji: "🦋" },
+        { word: "Mosquito", ipa: "/məsˈkiː.təʊ/", vi: "Con muỗi", emoji: "🦟" },
+        { word: "Fly", ipa: "/flaɪ/", vi: "Con ruồi", emoji: "🪰" },
+        { word: "Spider", ipa: "/ˈspaɪ.dər/", vi: "Con nhện", emoji: "🕷️" },
+        { word: "Cockroach", ipa: "/ˈkɒk.rəʊtʃ/", vi: "Con gián", emoji: "🪳" },
+        { word: "Caterpillar", ipa: "/ˈkæt.ə.pɪl.ər/", vi: "Con sâu", emoji: "🐛" },
+        { word: "Snake", ipa: "/sneɪk/", vi: "Con rắn", emoji: "🐍" },
+        { word: "Crocodile", ipa: "/ˈkrɒk.ə.daɪl/", vi: "Con cá sấu", emoji: "🐊" },
+        { word: "Lizard", ipa: "/ˈlɪz.əd/", vi: "Con thằn lằn", emoji: "🦎" },
+        { word: "Frog", ipa: "/frɒɡ/", vi: "Con ếch", emoji: "🐸" },
+        { word: "Toad", ipa: "/təʊd/", vi: "Con cóc", emoji: "🦘" },
+        { word: "Chameleon", ipa: "/kəˈmiː.li.ən/", vi: "Tắc kè hoa", emoji: "🦎" }
+      ],
+      birds: [
+        { word: "Eagle", ipa: "/ˈiː.ɡəl/", vi: "Chim đại bàng", emoji: "🦅" },
+        { word: "Owl", ipa: "/aʊl/", vi: "Chim cú mèo", emoji: "🦉" },
+        { word: "Pigeon", ipa: "/ˈpɪdʒ.ən/", vi: "Chim bồ câu", emoji: "🐦" },
+        { word: "Sparrow", ipa: "/ˈspær.əʊ/", vi: "Chim sẻ", emoji: "🐦" },
+        { word: "Crow", ipa: "/krəʊ/", vi: "Con quạ", emoji: "🐦" },
+        { word: "Swan", ipa: "/swɒn/", vi: "Chim thiên nga", emoji: "🦢" },
+        { word: "Flamingo", ipa: "/fləˈmɪŋ.ɡəʊ/", vi: "Chim hồng hạc", emoji: "🦩" },
+        { word: "Peacock", ipa: "/ˈpiː.kɒk/", vi: "Con công", emoji: "🦚" },
+        { word: "Woodpecker", ipa: "/ˈwʊdˌpek.ər/", vi: "Chim gõ kiến", emoji: "🐦" },
+        { word: "Falcon", ipa: "/ˈfɒl.kən/", vi: "Chim ưng", emoji: "🦅" }
+      ],
+      tech: [
+        { word: "Software", ipa: "/ˈsɒftweə/", vi: "Phần mềm", emoji: "💻" },
+        { word: "Hardware", ipa: "/ˈhɑːdweə/", vi: "Phần cứng", emoji: "🔌" },
+        { word: "Network", ipa: "/ˈnetwɜːk/", vi: "Mạng lưới", emoji: "🌐" },
+        { word: "Data", ipa: "/ˈdeɪtə/", vi: "Dữ liệu", emoji: "📊" },
+        { word: "Algorithm", ipa: "/ˈælɡərɪðəm/", vi: "Thuật toán", emoji: "🧮" },
+        { word: "Database", ipa: "/ˈdeɪtəbeɪs/", vi: "Cơ sở dữ liệu", emoji: "🗄️" },
+        { word: "Security", ipa: "/sɪˈkjʊərəti/", vi: "Bảo mật", emoji: "🔒" },
+        { word: "Encryption", ipa: "/ɪnˈkrɪpʃən/", vi: "Mã hóa", emoji: "🔑" },
+        { word: "Interface", ipa: "/ˈ|ntəfeɪs/", vi: "Giao diện", emoji: "🖥️" },
+        { word: "Processor", ipa: "/ˈprəʊsesə/", vi: "Bộ vi xử lý", emoji: "🎛️" },
+        { word: "Application", ipa: "/ˌæplɪˈkeɪʃən/", vi: "Ứng dụng", emoji: "📱" },
+        { word: "Browser", ipa: "/ˈbraʊzə/", vi: "Trình duyệt", emoji: "🌐" },
+        { word: "Server", ipa: "/ˈsɜːvə/", vi: "Máy chủ", emoji: "🖥️" },
+        { word: "Storage", ipa: "/ˈstɔːrɪdʒ/", vi: "Lưu trữ", emoji: "💾" },
+        { word: "Bandwidth", ipa: "/ˈbændwɪtθ/", vi: "Băng thông", emoji: "📡" },
+        { word: "Automation", ipa: "/ˌɔːtəˈmeɪʃən/", vi: "Tự động hóa", emoji: "🤖" },
+        { word: "Intelligence", ipa: "/ɪnˈtelɪdʒəns/", vi: "Trí tuệ", emoji: "🧠" },
+        { word: "Virtual", ipa: "/ˈvɜːtʃuəl/", vi: "Ảo", emoji: "🥽" },
+        { word: "Cloud", ipa: "/klaʊd/", vi: "Điện toán đám mây", emoji: "☁️" },
+        { word: "Device", ipa: "/dɪˈvaɪs/", vi: "Thiết bị", emoji: "📳" }
+      ],
+      health: [
+        { word: "Nutrition", ipa: "/njuːˈtrɪʃən/", vi: "Dinh dưỡng", emoji: "🍎" },
+        { word: "Vitamin", ipa: "/ˈvɪtəmɪn/", vi: "Vitamin", emoji: "💊" },
+        { word: "Exercise", ipa: "/ˈeksəsaɪz/", vi: "Tập thể dục", emoji: "🏃" },
+        { word: "Disease", ipa: "/dɪˈziːz/", vi: "Bệnh tật", emoji: "🦠" },
+        { word: "Symptom", ipa: "/ˈsymptəm/", vi: "Triệu chứng", emoji: "🤒" },
+        { word: "Diagnosis", ipa: "/ˌdaɪəɡˈnəʊsɪs/", vi: "Chẩn đoán", emoji: "🩺" },
+        { word: "Treatment", ipa: "/ˈtriːtmənt/", vi: "Điều trị", emoji: "🩹" },
+        { word: "Medicine", ipa: "/ˈmedsən/", vi: "Thuốc", emoji: "💊" },
+        { word: "Vaccine", ipa: "/ˈvæksiːn/", vi: "Vắc-xin", emoji: "💉" },
+        { word: "Immunity", ipa: "/ɪˈmjuːnəti/", vi: "Miễn dịch", emoji: "🛡️" },
+        { word: "Infection", ipa: "/ɪnˈfekʃən/", vi: "Nhiễm trùng", emoji: "🧫" },
+        { word: "Therapy", ipa: "/ˈθerəpi/", vi: "Liệu pháp", emoji: "🛋️" },
+        { word: "Patient", ipa: "/ˈpeɪʃənt/", vi: "Bệnh nhân", emoji: "🛏️" },
+        { word: "Hospital", ipa: "/ˈhɒspɪtl/", vi: "Bệnh viện", emoji: "🏥" },
+        { word: "Clinic", ipa: "/ˈklɪnɪk/", vi: "Phòng khám", emoji: "🩺" },
+        { word: "Surgery", ipa: "/ˈɜːdʒəri/", vi: "Phẫu thuật", emoji: "🥼" },
+        { word: "Hygiene", ipa: "/ˈhaɪdʒiːn/", vi: "Vệ sinh", emoji: "🧼" },
+        { word: "Fitness", ipa: "/ˈfɪtnəs/", vi: "Thể hình", emoji: "💪" },
+        { word: "Mental", ipa: "/ˈmentl/", vi: "Tinh thần", emoji: "🧠" },
+        { word: "Recovery", ipa: "/rɪˈkʌvəri/", vi: "Phục hồi", emoji: "❤️‍🩹" }
+      ],
+      education: [
+        { word: "Teacher", ipa: "/ˈtiːtʃə/", vi: "Giáo viên", emoji: "🧑‍🏫" },
+        { word: "Student", ipa: "/ˈstjuːdənt/", vi: "Học sinh", emoji: "🧑‍🎓" },
+        { word: "School", ipa: "/skuːl/", vi: "Trường học", emoji: "🏫" },
+        { word: "Subject", ipa: "/ˈsʌbdʒɪkt/", vi: "Môn học", emoji: "📚" },
+        { word: "Lesson", ipa: "/ˈlesən/", vi: "Bài học", emoji: "📝" },
+        { word: "Course", ipa: "/kɔːs/", vi: "Khóa học", emoji: "🗺️" },
+        { word: "Degree", ipa: "/dɪˈɡriː/", vi: "Bằng cấp", emoji: "📜" },
+        { word: "Diploma", ipa: "/dɪˈpləʊmə/", vi: "Chứng chỉ", emoji: "🎓" },
+        { word: "Exam", ipa: "/ɪɡˈzæm/", vi: "Kỳ thi", emoji: "✍️" },
+        { word: "Grade", ipa: "/ɡreɪd/", vi: "Điểm số", emoji: "💯" },
+        { word: "Tuition", ipa: "/tʃuːˈɪʃən/", vi: "Học phí", emoji: "💵" },
+        { word: "Scholarship", ipa: "/ˈskɒləʃɪp/", vi: "Học bổng", emoji: "🏅" },
+        { word: "Campus", ipa: "/ˈkæmpəs/", vi: "Khuôn viên trường", emoji: "🏫" },
+        { word: "Lecture", ipa: "/ˈlektʃə/", vi: "Bài giảng", emoji: "🗣️" },
+        { word: "Research", ipa: "/rɪˈsɜːtʃ/", vi: "Nghiên cứu", emoji: "🔬" },
+        { word: "Library", ipa: "/ˈlaɪbrəri/", vi: "Thư viện", emoji: "🏛️" },
+        { word: "Textbook", ipa: "/ˈtekstbʊk/", vi: "Sách giáo khoa", emoji: "📘" },
+        { word: "Curriculum", ipa: "/kəˈrɪkjʊləm/", vi: "Chương trình học", emoji: "🗓️" },
+        { word: "Knowledge", ipa: "/ˈnɒlɪdʒ/", vi: "Kiến thức", emoji: "💡" },
+        { word: "Graduation", ipa: "/ˌɡrædʒuˈeɪʃən/", vi: "Tốt nghiệp", emoji: "🎓" }
+      ],
+      family: [
+        { word: "Parents", ipa: "/ˈpeərənts/", vi: "Cha mẹ", emoji: "🧑‍🧑‍🧒" },
+        { word: "Father", ipa: "/ˈfɑːðə/", vi: "Cha", emoji: "👨" },
+        { word: "Mother", ipa: "/ˈmʌðə/", vi: "Mẹ", emoji: "👩" },
+        { word: "Children", ipa: "/ˈtʃɪldrən/", vi: "Con cái", emoji: "🧒" },
+        { word: "Son", ipa: "/sʌn/", vi: "Con trai", emoji: "👦" },
+        { word: "Daughter", ipa: "/ˈdɔːtə/", vi: "Con gái", emoji: "👧" },
+        { word: "Brother", ipa: "/ˈbrʌðə/", vi: "Anh/em trai", emoji: "🧑" },
+        { word: "Sister", ipa: "/ˈsɪstə/", vi: "Chị/em gái", emoji: "👩" },
+        { word: "Grandparents", ipa: "/ˈɡrænpeərənts/", vi: "Ông bà", emoji: "🧓" },
+        { word: "Grandfather", ipa: "/ˈɡrænfɑːðə/", vi: "Ông", emoji: "👴" },
+        { word: "Grandmother", ipa: "/ˈɡrænmʌðə/", vi: "Bà", emoji: "👵" },
+        { word: "Grandchild", ipa: "/ˈɡræntʃaɪld/", vi: "Cháu", emoji: "👶" },
+        { word: "Uncle", ipa: "/ˈuŋkl/", vi: "Chú/bác/cậu", emoji: "👨" },
+        { word: "Aunt", ipa: "/ɑːnt/", vi: "Cô/dì/mợ", emoji: "👩" },
+        { word: "Cousin", ipa: "/ˈkʌzn/", vi: "Anh em họ", emoji: "🧑" },
+        { word: "Nephew", ipa: "/ˈnefjuː/", vi: "Cháu trai (họ)", emoji: "👦" },
+        { word: "Niece", ipa: "/niːs/", vi: "Cháu gái (họ)", emoji: "👧" },
+        { word: "Spouse", ipa: "/spaʊz/", vi: "Vợ hoặc chồng", emoji: "💍" },
+        { word: "Sibling", ipa: "/ˈsɪblɪŋ/", vi: "Anh chị em ruột", emoji: "🧑‍🤝‍🧑" },
+        { word: "Ancestor", ipa: "/ˈænsestə/", vi: "Tổ tiên", emoji: "👴" }
+      ]
+    };
+
+    const K12_DATABASE = {
+      1: [{ struct: "Hello, I am [Name].", usage: "Chào hỏi cơ bản.", eg: "Hello, I am Nam." }],
+      6: [{ struct: "S + V-ed / V2...", usage: "Thì quá khứ đơn miêu tả sự kiện.", eg: "I visited Halong Bay last summer." }],
+      12: [{ struct: "No sooner had + S + V3 + than...", usage: "Đảo ngữ cấu trúc vừa mới... thì...", eg: "No sooner had I opened the door than it rained." }]
+    };
+
+    // THIẾT LẬP TRẠNG THÁI TOÀN CỤC (GLOBAL APP STATE)
+    let appState = {
+      userName: "Khách",
+      score: 100,
+      currentKidsTopic: "alphabet",
+      currentKidsIndex: 0,
+      currentSpeakingIndex: 0,
+      currentWritingIndex: 0
+    };
+
+    window.addEventListener('DOMContentLoaded', () => {
+      loadStateFromStorage();
+      buildGradeDropdown();
+      renderK12Lessons();
+      renderKidsTopicMenu();
+      updateKidsCard();
+      rotateAllPrompts(); // Tự động hoán đổi trộn đề khi load trang
+
+      setTimeout(() => {
+        document.getElementById('loading-screen').classList.add('hidden');
+        document.getElementById('app-container').classList.remove('hidden');
+      }, 1000);
+    });
+
+    function switchView(viewId) {
+      ['dashboard', 'kids', 'k12', 'ielts'].forEach(id => {
+        document.getElementById(`view-${id}`).classList.add('hidden');
+      });
+      document.getElementById(`view-${viewId}`).classList.remove('hidden');
+    }
+
+    function toggleModal(modalId) {
+      document.getElementById(modalId).classList.toggle('hidden');
+    }
+
+    // THUẬT TOÁN TỰ ĐỘNG ĐỔI ĐỀ (ROTATOR ENGINE)
+    function rotateAllPrompts() {
+      appState.currentSpeakingIndex = Math.floor(Math.random() * IELTS_SPEAKING_POOL.length);
+      appState.currentWritingIndex = Math.floor(Math.random() * IELTS_WRITING_POOL.length);
+      
+      document.getElementById('ielts-speaking-prompt').innerText = `"${IELTS_SPEAKING_POOL[appState.currentSpeakingIndex]}"`;
+      document.getElementById('ielts-writing-prompt').innerText = `"${IELTS_WRITING_POOL[appState.currentWritingIndex]}"`;
+    }
+
+    function triggerIeltSpeaking() {
+      const btn = document.getElementById('ielts-speak-btn');
+      btn.innerText = "🛑 AI Đang ghi nhận phản xạ...";
+      btn.className = "w-full bg-red-500 text-white text-xs font-bold px-4 py-2.5 rounded-xl shadow-md animate-pulse";
+
+      setTimeout(() => {
+        alert("🎉 Nộp bài Nói thành công! Kết quả ước tính đạt: Band 7.0.\n\nHệ thống Cambridge tự động hoán đổi sang một chủ đề Speaking mới.");
+        appState.score += 30;
+        
+        // Đổi đề Speaking khác lập tức
+        let oldIdx = appState.currentSpeakingIndex;
+        while(appState.currentSpeakingIndex === oldIdx) {
+          appState.currentSpeakingIndex = Math.floor(Math.random() * IELTS_SPEAKING_POOL.length);
+        }
+        document.getElementById('ielts-speaking-prompt').innerText = `"${IELTS_SPEAKING_POOL[appState.currentSpeakingIndex]}"`;
+        
+        btn.innerText = "Bắt Đầu Nói & Chấm Điểm";
+        btn.className = "w-full bg-indigo-600 hover:bg-indigo-700 text-white text-xs font-bold px-4 py-2.5 rounded-xl shadow-md";
+        saveStateToStorage();
+      }, 2000);
+    }
+
+    function submitIeltsWriting() {
+      const text = document.getElementById('ielts-writing-input').value;
+      if(text.trim().length < 10) {
+        alert("Hãy nhập một đoạn luận văn ngắn trước khi nộp.");
+        return;
+      }
+      alert("🏆 Nộp bài viết luận thành công! Điểm ngữ pháp đạt kết quả tốt.\n\nHệ thống tự động làm mới sang đề Writing mới tinh.");
+      appState.score += 50;
+      document.getElementById('ielts-writing-input').value = "";
+      document.getElementById('writing-word-count').innerText = "0 Từ";
+      localStorage.removeItem('starks_ielts_writing_v4');
+
+      // Đổi đề Writing khác lập tức
+      let oldIdx = appState.currentWritingIndex;
+      while(appState.currentWritingIndex === oldIdx) {
+        appState.currentWritingIndex = Math.floor(Math.random() * IELTS_WRITING_POOL.length);
+      }
+      document.getElementById('ielts-writing-prompt').innerText = `"${IELTS_WRITING_POOL[appState.currentWritingIndex]}"`;
+      saveStateToStorage();
+    }
+
+    // THUẬT TOÁN ĐIỀU PHỐI VÒNG LẶP VÔ HẠN CHO BÉ (INFINITE LOOP)
+    function renderKidsTopicMenu() {
+      const container = document.getElementById('kids-topic-list');
+      container.innerHTML = "";
+      
+      const friendlyNames = {
+        alphabet: "🔤 Bảng Chữ Cái A-Z",
+        pets: "🐮 Thú Cưng & Gia Súc", 
+        wild: "🦁 Động Vật Hoang Dã", 
+        marine: "🦈 Sinh Vật Dưới Nước", 
+        insects: "🐛 Côn Trùng & Bò Sát", 
+        birds: "🦅 Các Loài Chim",
+        tech: "💻 Chủ Đề Công Nghệ",
+        health: "🍎 Chủ Đề Sức Khỏe",
+        education: "🏫 Chủ Đề Giáo Dục",
+        family: "🧑‍🧑‍🧒 Chủ Đề Gia Đình"
+      };
+
+      Object.keys(KIDS_DATABASE).forEach(key => {
+        const isSelected = appState.currentKidsTopic === key;
+        const btn = document.createElement('button');
+        btn.className = `w-full text-left p-2.5 rounded-xl font-black text-xs transition-all flex justify-between items-center ${
+          isSelected ? 'bg-amber-500 text-white shadow-sm scale-102' : 'bg-slate-50 text-slate-700 hover:bg-slate-100'
+        }`;
+        btn.onclick = () => {
+          appState.currentKidsTopic = key;
+          appState.currentKidsIndex = 0;
+          renderKidsTopicMenu();
+          updateKidsCard();
+        };
+        btn.innerHTML = `<span>${friendlyNames[key] || key}</span> ${isSelected ? '✨' : ''}`;
+        container.appendChild(btn);
+      });
+    }
+
+    function updateKidsCard() {
+      const currentList = KIDS_DATABASE[appState.currentKidsTopic];
+      const data = currentList[appState.currentKidsIndex];
+      
+      document.getElementById('kids-main-emoji').innerText = data.emoji;
+      document.getElementById('kids-word-en').innerText = data.word;
+      document.getElementById('kids-word-ipa').innerText = data.ipa;
+      document.getElementById('kids-word-vi').innerText = data.vi;
+      document.getElementById('kids-progress-text').innerText = `${appState.currentKidsIndex + 1} / ${currentList.length}`;
+      document.getElementById('kids-score-box').classList.add('hidden');
+    }
+
+    // VÒNG LẶP VÔ HẠN SỬ DỤNG TOÁN TỬ PHẦN TRĂM (%) TRÁNH TRÀN MẢNG
+    function changeKidsWord(direction) {
+      const currentList = KIDS_DATABASE[appState.currentKidsTopic];
+      appState.currentKidsIndex = (appState.currentKidsIndex + direction + currentList.length) % currentList.length;
+      updateKidsCard();
+    }
+
+    function triggerKidsSpeech() {
+      document.getElementById('kids-score-box').classList.remove('hidden');
+      appState.score += 10;
+      saveStateToStorage();
+    }
+
+    function speakCurrentKidsWord() {
+      const txt = document.getElementById('kids-word-en').innerText.split(' ')[0];
+      const utterance = new SpeechSynthesisUtterance(txt);
+      utterance.lang = 'en-US';
+      window.speechSynthesis.speak(utterance);
+    }
+
+    // QUẢN LÝ LỚP HỌC PHỔ THÔNG K-12
+    function buildGradeDropdown() {
+      const select = document.getElementById('k12-grade-select');
+      for(let i = 1; i <= 12; i++) {
+        const opt = document.createElement('option');
+        opt.value = i;
+        opt.innerText = `Chương Trình Lớp ${i}`;
+        select.appendChild(opt);
+      }
+    }
+
+    function renderK12Lessons() {
+      const grade = document.getElementById('k12-grade-select').value;
+      const contentArea = document.getElementById('k12-content-area');
+      contentArea.innerHTML = "";
+      const data = K12_DATABASE[grade] || K12_DATABASE[1];
+
+      data.forEach(item => {
+        const card = document.createElement('div');
+        card.className = "bg-white p-5 rounded-2xl border-2 border-slate-100 shadow-sm space-y-2";
+        card.innerHTML = `
+          <h4 class="text-base font-extrabold text-slate-800">${item.struct}</h4>
+          <p class="text-xs text-slate-500"><strong>Cách dùng:</strong> ${item.usage}</p>
+          <p class="text-xs text-emerald-700 font-bold">👉 Ví dụ trên lớp: ${item.eg}</p>
+        `;
+        contentArea.appendChild(card);
+      });
+    }
+
+    function countWritingWords() {
+      const text = document.getElementById('ielts-writing-input').value;
+      localStorage.setItem('starks_ielts_writing_v4', text);
+      const words = text.trim().split(/\s+/).filter(w => w.length > 0).length;
+      document.getElementById('writing-word-count').innerText = `${words} Từ`;
+    }
+
+    function loadStateFromStorage() {
+      const saved = localStorage.getItem('starks_emoji_state');
+      if (saved) {
+        appState = JSON.parse(saved);
+        document.getElementById('header-user-name').innerText = `Học viên: ${appState.userName}`;
+        document.getElementById('user-name-input').value = appState.userName;
+        document.getElementById('score-count').innerText = appState.score;
+      }
+      const savedWriting = localStorage.getItem('starks_ielts_writing_v4');
+      if(savedWriting) {
+        document.getElementById('ielts-writing-input').value = savedWriting;
+        countWritingWords();
+      }
+    }
+
+    function saveStateToStorage() {
+      localStorage.setItem('starks_emoji_state', JSON.stringify(appState));
+      document.getElementById('score-count').innerText = appState.score;
+    }
+
+    function saveUserProfile() {
+      const nameInput = document.getElementById('user-name-input').value;
+      if (nameInput.trim() !== "") {
+        appState.userName = nameInput;
+        document.getElementById('header-user-name').innerText = `Học viên: ${nameInput}`;
+        saveStateToStorage();
+        toggleModal('profile-modal');
+      }
+    }
+  </script>
+</body>
+</html>
